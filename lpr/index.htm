@@ -1,0 +1,701 @@
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <link rel="Bookmark" href="http://www.fawu.xyz/favicon.ico">
+    <title>利息和LPR分段计算器</title>
+    <meta name = "keywords" content = "利息和LPR分段计算器">
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background: linear-gradient(135deg, #f5f7fa 0%, #e4edf5 100%);
+            min-height: 100vh;
+            padding: 20px;
+            display: flex;
+            justify-content: center;
+            align-items: flex-start; /* 页面内容从顶部开始对齐 */
+        }
+        
+        .container {
+            max-width: 1100px;
+            width: 100%;
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+        }
+        
+        header {
+            background: linear-gradient(to right, #2c3e50, #4a6491);
+            color: white;
+            padding: 25px 30px;
+            text-align: center;
+        }
+        
+        header h1 {
+            font-size: 28px;
+            margin-bottom: 8px;
+        }
+        
+        header p {
+            opacity: 0.85;
+            font-size: 16px;
+        }
+        
+        .content {
+            display: flex;
+            flex-wrap: wrap;
+            padding: 25px;
+            align-items: flex-start; /* 确保内容部分从左上角对齐 */
+        }
+        
+        .input-section {
+            flex: 1;
+            min-width: 280px;
+            max-width: 320px;
+            padding: 20px;
+            background: #f8f9fa;
+            border-radius: 10px;
+            margin-right: 25px;
+            min-height: 400px; /* 设置固定高度，确保不同选项下高度一致 */
+        }
+        
+        .result-section {
+            flex: 3;
+            min-width: 500px;
+            padding: 20px;
+        }
+        
+        .form-group {
+            margin-bottom: 20px;
+        }
+        
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: #2c3e50;
+        }
+        
+        .form-group input, 
+        .form-group select {
+            width: 100%;
+            padding: 12px 15px;
+            border: 1px solid #ddd;
+            border-radius: 6px;
+            font-size: 16px;
+            background: white;
+        }
+        
+        .radio-group {
+            display: flex;
+            gap: 20px;
+            margin-bottom: 15px;
+        }
+        
+        .radio-option {
+            display: flex;
+            align-items: center;
+            cursor: pointer;
+        }
+        
+        .radio-option input {
+            width: auto;
+            margin-right: 8px;
+        }
+        
+        .custom-rate-row {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-top: 8px;
+        }
+        
+        .custom-rate-label {
+            flex: 0 0 auto;
+            padding-right: 10px;
+        }
+        
+        .custom-rate-input-container {
+            flex: 1;
+        }
+        
+        .custom-rate-input {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 14px;
+            width: 60px;
+            height: 30px;
+        }
+        
+        .custom-rate-unit {
+            width: 60px;
+            padding: 5px;
+        }
+
+        /* 移除数字输入框的上下箭头 */
+        input[type="number"] {
+            -moz-appearance: textfield; /* Firefox */
+        }
+        
+        input[type="number"]::-webkit-inner-spin-button,
+        input[type="number"]::-webkit-outer-spin-button {
+            -webkit-appearance: none; /* Chrome, Safari, Edge */
+        }
+        
+        .calculate-btn {
+            background: linear-gradient(to right, #3498db, #2c3e50);
+            color: white;
+            border: none;
+            padding: 14px 20px;
+            font-size: 18px;
+            border-radius: 6px;
+            cursor: pointer;
+            width: 100%;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            margin-top: 10px;
+        }
+        
+        .calculate-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(52, 152, 219, 0.4);
+        }
+        
+        .result-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            padding-bottom: 15px;
+            border-bottom: 1px solid #eee;
+        }
+        
+        .result-header h2 {
+            color: #2c3e50;
+            font-size: 24px;
+        }
+        
+        .summary {
+            background: linear-gradient(to right, #f8f9fa, #e9ecef);
+            border-radius: 8px;
+            padding: 20px;
+            margin-bottom: 25px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+        }
+        
+        .total-amount-section {
+            flex-basis: 100%;
+            padding: 10px;
+            border-top: 1px dashed #ccc;
+            margin-top: 5px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .total-amount-label {
+            font-size: 16px;
+            font-weight: 600;
+            color: #2c3e50;
+        }
+        
+        .total-amount-value {
+            font-size: 22px;
+            font-weight: 700;
+            color: #e74c3c;
+        }
+        
+        .details {
+            background: white;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+        }
+        
+        .details h3 {
+            background: #2c3e50;
+            color: white;
+            padding: 12px 20px;
+            font-size: 18px;
+        }
+        
+        .table-container {
+            overflow-x: auto;
+        }
+        
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        
+        th {
+            background: #f1f5f9;
+            padding: 12px 15px;
+            text-align: left;
+            font-weight: 600;
+            color: #2c3e50;
+            border-bottom: 1px solid #ddd;
+        }
+        
+        td {
+            padding: 12px 15px;
+            border-bottom: 1px solid #eee;
+        }
+        
+        tr:last-child td {
+            border-bottom: none;
+        }
+        
+        tr:nth-child(even) {
+            background-color: #f9f9f9;
+        }
+        
+        .highlight {
+            background-color: #e3f2fd !important;
+            font-weight: 600;
+        }
+        
+        .lpr-value {
+            color: #e74c3c;
+            font-weight: 600;
+        }
+        
+        .multiplied {
+            color: #27ae60;
+            font-weight: 600;
+        }
+        
+        .disclaimer {
+            background: #fff8e1;
+            border-left: 4px solid #ffc107;
+            padding: 15px;
+            margin-top: 25px;
+            border-radius: 4px;
+            font-size: 14px;
+        }
+        
+        @media (max-width: 900px) {
+            .content {
+                flex-direction: column;
+                padding: 15px;
+            }
+            
+            .input-section {
+                margin-right: 0;
+                margin-bottom: 20px;
+                max-width: 100%;
+            }
+            
+            .result-section {
+                min-width: 100%;
+            }
+        }
+        
+        @media (max-width: 500px) {
+            .summary-item {
+                flex-basis: 100%;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>利息和LPR分段计算器</h1>
+            <p>本工具用于计算利息和LPR不同利率时分段计算利息</p>
+        </header>
+        
+        <div class="content">
+            <div class="input-section">
+                <div class="form-group">
+                    <label for="principal">案款本金 (元)</label>
+                    <input type="number" id="principal" value="10000" min="1">
+                </div>
+                
+                <div class="form-group">
+                    <label for="start-date">开始日期</label>
+                    <input type="date" id="start-date" value="2023-01-01">
+                </div>
+                
+                <div class="form-group">
+                    <label for="end-date">结束日期</label>
+                    <input type="date" id="end-date" value="2024-01-01">
+                </div>
+                
+                <div class="form-group">
+                    <label>计息方式</label>
+                    <div class="radio-group">
+                        <label class="radio-option">
+                            <input type="radio" name="interest-type" value="average" checked>
+                            分段LPR
+                        </label>
+                        <label class="radio-option">
+                            <input type="radio" name="interest-type" value="multiplied">
+                            分段LPR的4倍
+                        </label>
+                    </div>
+                    
+                    <div class="custom-rate-row">
+                        <label class="radio-option">
+                            <input type="radio" name="interest-type" value="custom">
+                            <span style="margin-right: 5px;">自定义</span>
+                        </label>
+                        <input type="number" id="custom-rate" class="custom-rate-input" placeholder="0.0" style="width: 55px; margin-right: 5px;">
+                        <span style="margin-right: 5px;">%</span>
+                        <select id="custom-rate-unit" class="custom-rate-unit" style="width: 50px; padding: 5px;">
+                            <option value="year">年</option>
+                            <option value="month">月</option>
+                        </select>
+                    </div>
+                </div>
+                
+                <button id="calculate-btn" class="calculate-btn">计算利息</button>
+            </div>
+            
+            <div class="result-section">
+                <div class="details">
+                    <h3>计算明细</h3>
+                    <div class="table-container">
+                        <table id="details-table">
+                            <thead>
+                                <tr>
+                                    <th>时间段</th>
+                                    <th>天数</th>
+                                    <th>LPR利率</th>
+                                    <th>实际利率</th>
+                                    <th>利息(元)</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>2023-01-01 至 2023-06-20</td>
+                                    <td>170</td>
+                                    <td class="lpr-value">3.65%</td>
+                                    <td class="lpr-value">3.65%</td>
+                                    <td>170.00</td>
+                                </tr>
+                                <tr>
+                                    <td>2023-06-20 至 2023-08-21</td>
+                                    <td>62</td>
+                                    <td class="lpr-value">3.55%</td>
+                                    <td class="lpr-value">3.55%</td>
+                                    <td>60.30</td>
+                                </tr>
+                                    <td>2023-08-21 至 2024-01-01</td>
+                                    <td>133</td>
+                                    <td class="lpr-value">3.45%</td>
+                                    <td class="lpr-value">3.45%</td>
+                                    <td>125.71</td>
+                                </tr>
+                                <tr class="highlight">
+                                    <td><strong>利息总计</strong></td>
+                                    <td><strong>365</strong></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td><strong>356.01</strong></td>
+                                </tr>
+                                <tr class="highlight">
+                                    <td><strong>本息总和</strong></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td><strong>10356.01</strong></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                
+                <div class="disclaimer">
+                    <p><strong>说明：</strong>内容基于中国人民银行公布的LPR历史数据，计算结果仅供参考，不作为正式金融建议。</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // DOM元素
+        const principalInput = document.getElementById('principal');
+        const startDateInput = document.getElementById('start-date');
+        const endDateInput = document.getElementById('end-date');
+        const calculateBtn = document.getElementById('calculate-btn');
+        
+        // 自定义利率相关元素
+        const customRateInput = document.getElementById('custom-rate');
+        const customRateUnitSelect = document.getElementById('custom-rate-unit');
+        
+        // 结果元素
+        const detailsTable = document.getElementById('details-table');
+        
+        // LPR历史数据（2020年至今的1年期LPR）
+        const lprHistory = [
+            { date: '2019-08-20', rate: 4.25 },
+            { date: '2019-09-20', rate: 4.20 },
+            { date: '2019-11-20', rate: 4.15 },
+            { date: '2020-02-20', rate: 4.05 },
+            { date: '2020-04-20', rate: 3.85 },
+            { date: '2021-12-20', rate: 3.80 },
+            { date: '2022-01-20', rate: 3.70 },
+            { date: '2022-08-22', rate: 3.65 },
+            { date: '2023-06-20', rate: 3.55 },
+            { date: '2023-08-21', rate: 3.45 },
+            { date: '2024-07-22', rate: 3.35 },
+            { date: '2024-10-21', rate: 3.10 },
+            { date: '2025-08-20', rate: 3.00 }
+        ];
+        
+        // 计算利息函数
+        function calculateInterest() {
+            // 获取输入值
+            const principal = parseFloat(principalInput.value) || 1000000;
+            const startDate = new Date(startDateInput.value);
+            const endDate = new Date(endDateInput.value);
+            const interestType = document.querySelector('input[name="interest-type"]:checked').value;
+            let customRate = parseFloat(customRateInput.value) || 0;
+            
+            // 根据单位处理自定义利率
+            if (interestType === 'custom') {
+                const unit = customRateUnitSelect.value;
+                // 如果是月利率，不需要进行转换
+            }
+            
+            // 计算天数差
+            const timeDiff = endDate - startDate;
+            const days = Math.ceil(timeDiff / (1000 * 60 * 60 * 24));
+            
+            let periods = [];
+            if (interestType === 'custom') {
+                // 如果是自定义利率，则整个时间段使用同一利率
+                periods = [
+                    {
+                        start: startDate,
+                        end: endDate,
+                        rate: customRate
+                    }
+                ];
+            } else {
+                // 获取LPR历史数据
+                periods = getLprPeriods(startDate, endDate);
+            }
+            
+            // 计算每个时段的利息
+            let totalInterestVal = 0;
+            let totalWeightedRate = 0;
+            let totalDays = 0;
+            
+            const detailsRows = [];
+            
+            periods.forEach(period => {
+                const periodDays = Math.ceil((period.end - period.start) / (1000 * 60 * 60 * 24));
+                totalDays += periodDays;
+                
+                // 计算实际利率
+                let actualRate = period.rate;
+                if (interestType === 'multiplied') {
+                    actualRate = period.rate * 4;
+                }
+                
+                // 计算该时段利息
+                let periodInterest;
+                if (interestType === 'custom') {
+                    const unit = customRateUnitSelect.value;
+                    if (unit === 'month') {
+                        // 如果是月利率，按月计算
+                        const months = periodDays / 30; // 假设每月30天
+                        periodInterest = principal * (actualRate / 100) * months;
+                    } else {
+                        // 年利率按天计算
+                        periodInterest = principal * (actualRate / 100) * (periodDays / 365);
+                    }
+                } else {
+                    // 年利率按天计算
+                    periodInterest = principal * (actualRate / 100) * (periodDays / 365);
+                }
+                
+                totalInterestVal += periodInterest;
+                totalWeightedRate += period.rate * periodDays;
+                
+                // 添加到明细
+                detailsRows.push({
+                    start: formatDate(period.start),
+                    end: formatDate(period.end),
+                    days: periodDays,
+                    lprRate: period.rate,
+                    actualRate: actualRate,
+                    interest: periodInterest
+                });
+            });
+            
+            // 计算分段LPR
+            const avgLpr = totalWeightedRate / totalDays;
+            
+            // 计算实际平均利率
+            let actualAvgRate = avgLpr;
+            if (interestType === 'multiplied') {
+                actualAvgRate = avgLpr * 4;
+            }
+            
+            // 更新结果
+            updateResults(principal, days, totalInterestVal, detailsRows);
+        }
+        
+        // 获取时间段内的LPR变化
+        function getLprPeriods(startDate, endDate) {
+            const periods = [];
+            let currentDate = new Date(startDate);
+            
+            // 获取所有在时间段内的LPR变化点
+            const lprChanges = lprHistory
+                .map(item => ({
+                    date: new Date(item.date),
+                    rate: item.rate
+                }))
+                .filter(item => item.date > startDate && item.date <= endDate)
+                .sort((a, b) => a.date - b.date);
+            
+            // 如果没有变化点，整个时间段使用初始LPR
+            if (lprChanges.length === 0) {
+                const initialRate = getLprRate(startDate);
+                periods.push({
+                    start: startDate,
+                    end: endDate,
+                    rate: initialRate
+                });
+                return periods;
+            }
+            
+            // 添加第一个时间段（从开始日期到第一个变化点）
+            const initialRate = getLprRate(startDate);
+            periods.push({
+                start: startDate,
+                end: new Date(lprChanges[0].date),
+                rate: initialRate
+            });
+            
+            // 添加中间时间段
+            for (let i = 0; i < lprChanges.length - 1; i++) {
+                periods.push({
+                    start: new Date(lprChanges[i].date),
+                    end: new Date(lprChanges[i + 1].date),
+                    rate: lprChanges[i].rate
+                });
+            }
+            
+            // 添加最后时间段（从最后一个变化点到结束日期）
+            periods.push({
+                start: new Date(lprChanges[lprChanges.length - 1].date),
+                end: endDate,
+                rate: lprChanges[lprChanges.length - 1].rate
+            });
+            
+            return periods;
+        }
+        
+        // 获取指定日期的LPR
+        function getLprRate(date) {
+            // 找到在指定日期之前的最新LPR
+            for (let i = lprHistory.length - 1; i >= 0; i--) {
+                const lprDate = new Date(lprHistory[i].date);
+                if (lprDate <= date) {
+                    return lprHistory[i].rate;
+                }
+            }
+            // 默认返回最近的LPR
+            return lprHistory[lprHistory.length - 1].rate;
+        }
+        
+        // 更新结果
+        function updateResults(principal, days, totalInterestVal, detailsRows) {
+            // 更新明细表格
+            let tableHtml = `
+                <thead>
+                    <tr>
+                        <th>时间段</th>
+                        <th>天数</th>
+                        <th>LPR利率</th>
+                        <th>实际利率</th>
+                        <th>利息(元)</th>
+                    </tr>
+                </thead>
+                <tbody>
+            `;
+            
+            detailsRows.forEach(row => {
+                const interestType = document.querySelector('input[name="interest-type"]:checked').value;
+                const lprClass = interestType === 'multiplied' && row.actualRate !== row.lprRate ? 'multiplied' : 'lpr-value';
+                
+                tableHtml += `
+                    <tr>
+                        <td>${row.start} 至 ${row.end}</td>
+                        <td>${row.days}</td>
+                        <td class="lpr-value">${row.lprRate.toFixed(2)}%</td>
+                        <td class="${lprClass}">${row.actualRate.toFixed(2)}%</td>
+                        <td>${row.interest.toFixed(2)}</td>
+                    </tr>
+                `;
+            });
+            
+            // 添加利息总计行和本息总和行
+            const interestType = document.querySelector('input[name="interest-type"]:checked').value;
+            const lprClass = interestType === 'multiplied' ? 'multiplied' : 'lpr-value';
+            
+            tableHtml += `
+                <tr class="highlight">
+                    <td><strong>利息总计</strong></td>
+                    <td><strong>${days}</strong></td>
+                    <td></td>
+                    <td class="${lprClass}"></td>
+                    <td><strong>${totalInterestVal.toFixed(2)}</strong></td>
+                </tr>
+                <tr class="highlight">
+                    <td><strong>本息总和</strong></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td><strong>${(principal + totalInterestVal).toFixed(2)}</strong></td>
+                </tr>
+            `;
+            
+            tableHtml += '</tbody>';
+            detailsTable.innerHTML = tableHtml;
+        }
+        
+        // 格式化日期为YYYY-MM-DD
+        function formatDate(date) {
+            const year = date.getFullYear();
+            const month = String(date.getMonth() + 1).padStart(2, '0');
+            const day = String(date.getDate()).padStart(2, '0');
+            return `${year}-${month}-${day}`;
+        }
+        
+        // 事件监听
+        calculateBtn.addEventListener('click', calculateInterest);
+        
+        // 自定义利率选项显示/隐藏
+        const interestTypeRadios = document.querySelectorAll('input[name="interest-type"]');
+        interestTypeRadios.forEach(radio => {
+            radio.addEventListener('change', function() {
+                if (this.value === 'custom') {
+                    customRateInput.style.display = 'inline-block';
+                    customRateUnitSelect.style.display = 'inline-block';
+                } else {
+                    customRateInput.style.display = 'none';
+                    customRateUnitSelect.style.display = 'none';
+                }
+            });
+        });
+        
+        // 初始化，默认隐藏自定义利率输入框和单位选择
+        customRateInput.style.display = 'none';
+        customRateUnitSelect.style.display = 'none';
+    </script>
+</body>
+</html>
