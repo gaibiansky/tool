@@ -1,0 +1,197 @@
+:root {
+    --transition: 0.3s ease;
+    --font-main: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif;
+
+    /* 暗色模式默认变量 */
+    --bg-gradient: linear-gradient(120deg, #1a1a1a, #2c2c2e);
+    --text-color: #f5f5f7;
+    /* 将 table-bg 稍微调得更透明一点 */
+    --table-bg: rgba(40,40,45,0.3);
+    --thead-bg: rgba(255,255,255,0.1);
+    --hover-bg: rgba(255,255,255,0.1);
+    --border-color: rgba(255,255,255,0.2);
+    --link-bg: #0a84ff;
+    --link-hover-bg: #0062cc;
+    --accessible-color: #0a84ff;
+    --inaccessible-color: #d93025;
+}
+
+body {
+    margin: 0;
+    padding: 0;
+    font-family: var(--font-main);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    background: var(--bg-gradient);
+    color: var(--text-color);
+    transition: background var(--transition), color var(--transition);
+}
+
+header {
+    text-align: center;
+    margin: 0 20px 30px;
+}
+
+.title-bar {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 20px;
+}
+
+.title-bar h2 {
+    font-size: 1.8rem;
+    font-weight: 600;
+    margin: 0;
+    letter-spacing: -0.5px;
+}
+
+.theme-icon {
+    background: none;
+    border: none;
+    font-size: 1.8rem;
+    cursor: pointer;
+    color: var(--text-color);
+    transition: color var(--transition);
+}
+
+.container {
+    /* 使用更加透明的前景背景，以便能看出后面被模糊的背景 */
+    background: var(--table-bg);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border-radius: 16px;
+    padding: 20px;
+    max-width: 700px;
+    width: 90%;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+    border: 1px solid rgba(255,255,255,0.3);
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+    transition: background var(--transition), border var(--transition);
+}
+
+table {
+    border-collapse: collapse;
+    width: 100%;
+    border-radius: 12px;
+    overflow: hidden;
+    transition: background var(--transition);
+}
+
+thead {
+    background: var(--thead-bg);
+    transition: background var(--transition);
+}
+
+th {
+    font-weight: 600;
+    padding: 14px 16px;
+    font-size: 0.95rem;
+    text-align: left;
+    border-bottom: 1px solid var(--border-color);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+}
+
+td {
+    padding: 14px 16px;
+    font-size: 0.95rem;
+    border-bottom: 1px solid var(--border-color);
+    vertical-align: middle;
+    transition: background var(--transition);
+}
+
+tr:last-child td {
+    border-bottom: none;
+}
+
+tbody tr:hover td {
+    background: var(--hover-bg);
+}
+
+.status {
+    font-size: 1rem;
+    display: flex;
+    align-items: center;
+}
+
+.loading {
+    color: #aaa;
+    position: relative;
+}
+
+.loading::after {
+    content: "检测中…";
+}
+
+.accessible {
+    color: var(--accessible-color);
+    font-weight: 500;
+}
+
+.inaccessible {
+    color: var(--inaccessible-color);
+    font-weight: 500;
+}
+
+.accessible::before,
+.inaccessible::before {
+    margin-right: 6px;
+}
+
+.accessible::before {
+    content: "✅";
+}
+
+.inaccessible::before {
+    content: "❌";
+}
+
+a.open-link {
+    display: inline-block;
+    margin-left: 12px;
+    background: var(--link-bg);
+    color: #fff;
+    text-decoration: none;
+    border-radius: 6px;
+    padding: 4px 10px;
+    font-size: 0.9rem;
+    transition: background var(--transition);
+}
+a.open-link:hover {
+    background: var(--link-hover-bg);
+}
+
+.big-button {
+    display: block;
+    width: 100%;
+    background: var(--link-bg);
+    color: #fff;
+    border: none;
+    border-radius: 8px;
+    font-size: 1.2rem;
+    padding: 14px 0;
+    cursor: pointer;
+    margin-top: 20px;
+    transition: background var(--transition);
+    text-align: center;
+    box-sizing: border-box;
+}
+.big-button:hover {
+    background: var(--link-hover-bg);
+}
+
+@media (max-width: 600px) {
+    th, td {
+        font-size: 0.9rem;
+        padding: 10px 12px;
+    }
+    .title-bar h2 {
+        font-size: 1.6rem;
+    }
+}

@@ -1,0 +1,241 @@
+<html lang="zh-CN">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <link rel="favicon" href="favicon.ico">
+    <title>法律服务永久地址发布页</title>
+    <meta name="keywords" content="法律服务" />
+    <meta name="description" content="法律服务" />
+    <link rel="stylesheet" href="style.css" type="text/css" />
+    
+    <style>
+        body {
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-start;
+            align-items: center;
+            padding-top: 25px; 
+            margin: 0;
+            box-sizing: border-box;
+            height: 100vh;
+        }
+
+        header {
+            margin-bottom: 12px; 
+            text-align: center;
+            width: 100%;
+            max-width: 400px; 
+            padding: 0 20px;
+            box-sizing: border-box;
+        }
+
+        header h1 {
+            margin: 0 0 2px 0;
+            font-size: 24px;
+        }
+
+        /* 微信文字：字号14 #e0e0e0 同表格备注 */
+        header span {
+            display: block;
+            margin-bottom: 10px; 
+            font-size: 14px;
+            color: #e0e0e0;
+        }
+
+        /* 百度搜索框容器 */
+        .search-box {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 100%;
+            margin: 0 auto 6px auto;
+        }
+
+        .search-box form {
+            display: flex;
+            width: 100%;
+            border: 1px solid #555;
+            border-radius: 6px;
+            overflow: hidden;
+            background-color: #1a1a1a;
+            transition: border-color 0.3s ease;
+        }
+
+        .search-box form:focus-within {
+            border-color: #999;
+        }
+
+        /* 输入框文字+占位 14 #e0e0e0 */
+        .search-input {
+            flex: 1;
+            border: none;
+            background: transparent;
+            padding: 11px 12px;
+            color: #e0e0e0;
+            font-size: 14px;
+            outline: none;
+        }
+        .search-input::placeholder {
+            color: #e0e0e0 !important;
+            opacity:1;
+        }
+
+        /* 搜索按钮文字同规格 */
+        .search-btn {
+            border: none;
+            background-color: #333; 
+            color: #e0e0e0;
+            padding: 0 20px;
+            font-size: 14px;
+            cursor: pointer;
+            transition: background-color 0.2s, color 0.2s;
+        }
+        .search-btn:hover {
+            background-color: #444; 
+            color: #ffffff;            
+        }
+
+        /* 表格区域 */
+        .container {
+            width: 100%;
+            max-width: 800px; 
+            padding: 0 20px;
+            box-sizing: border-box;
+        }
+        .table-wrapper {
+            max-height: 60vh; 
+            overflow-y: auto;  
+            border-radius: 8px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.25);
+            scroll-behavior: smooth;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            table-layout: fixed; 
+        }
+        th, td {
+            padding: 12px 10px !important; 
+            line-height: 1.5 !important;   
+            vertical-align: middle;        
+            box-sizing: border-box;
+        }
+        thead th {
+            position: sticky;
+            top: 0;
+            background-color: #1f1f1f; 
+            z-index: 10;
+            border-bottom: 2px solid #2d2d2d;
+            text-align: center !important; 
+        }
+        tbody td {
+            text-align: left; 
+            color: #e0e0e0;
+            font-size:14px;
+        }
+        table tr td:first-child {
+            text-align: center !important; 
+        }
+        tbody tr {
+            background-color: transparent;
+            transition: background-color 0.35s cubic-bezier(0.25, 0.8, 0.25, 1);
+        }
+        tbody tr:hover {
+            background-color: rgba(255, 255, 255, 0.05) !important; 
+        }
+        td a.memo-link {
+            color: inherit;               
+            text-decoration: none !important; 
+            display: block;               
+            width: 100%;
+        }
+        td a.memo-link:hover {
+            opacity: 0.85;                   
+        }
+        td.status {
+            white-space: nowrap; 
+            overflow: hidden;
+            text-overflow: clip;
+            display: flex;                  
+            justify-content: flex-end;      
+            align-items: center;            
+            height: 100%;                   
+            padding-right: 15px !important; 
+        }
+        td.status span.status-text {
+            margin-right: 10px;             
+        }
+        td.status a.open-link {
+            display: inline-block;
+            line-height: 1;
+            padding: 4px 14px !important;   
+            min-width: 45px;                
+            text-align: center;
+            margin: 0;
+            vertical-align: middle;
+            text-decoration: none;
+            border-radius: 4px;             
+        }
+    </style>
+</head>
+<body class="dark-mode">
+<header>
+    <h1>法律服务地址页</h1>
+    <span>微信4049431</span>
+    
+    <div class="search-box">
+        <form action="https://www.baidu.com/s" method="get" target="_blank">
+            <input type="text" name="wd" class="search-input" placeholder="百度一下..." required>
+            <button type="submit" class="search-btn">搜索</button>
+        </form>
+    </div>
+</header>
+
+<div class="container">
+    <div class="table-wrapper">
+        <table>
+            <thead>
+                <tr>
+                    <th style="width: 8%;">序号</th>
+                    <th style="width: 62%;">备注</th>
+                    <th style="width: 30%;">状态</th>
+                </tr>
+            </thead>
+            <tbody id="website-list">
+                <tr data-url="http://5ddd.com/gaibian">
+                    <td>1</td>
+                    <td><a href="http://5ddd.com/gaibian" target="_blank" class="memo-link">NAS服务器</a></td>
+                    <td class="status"></td>
+                </tr>
+                <tr data-url="http://tool.342652.xyz/ssf/">
+                    <td>2</td>
+                    <td><a href="http://tool.342652.xyz/ssf/" target="_blank" class="memo-link">案件受理保全执行费用计算器</a></td>
+                    <td class="status"></td>
+                </tr>
+                <tr data-url="http://tool.342652.xyz/lpr/">
+                    <td>3</td>
+                    <td><a href="http://tool.342652.xyz/lpr/" target="_blank" class="memo-link">案件利息和LPR利息分段计算器</a></td>
+                    <td class="status"></td>
+                </tr>
+                <tr data-url="https://zxgk.court.gov.cn/zhzxgk/">
+                    <td>4</td>
+                    <td><a href="https://zxgk.court.gov.cn/zhzxgk/" target="_blank" class="memo-link">执行信息公开网</a></td>
+                    <td class="status"></td>
+                </tr>
+                <tr data-url="https://law.wkinfo.com.cn/judgment-documents/list?simple=">
+                    <td>5</td>
+                    <td><a href="https://law.wkinfo.com.cn/judgment-documents/list?simple=" target="_blank" class="memo-link">威科先行</a></td>
+                    <td class="status"></td>
+                </tr>
+                <tr data-url="https://www.gsxt.gov.cn/index.html">
+                    <td>6</td>
+                    <td><a href="https://www.gsxt.gov.cn/index.html" target="_blank" class="memo-link">国家企业信用信息公示系统</a></td>
+                    <td class="status"></td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+<script src="check.js"></script>
+</body>
+</html>
